@@ -1,48 +1,26 @@
-name: Robot Framework Tests
+name: Postman Workflow
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push]
 
 jobs:
-  run-robot-tests:
+  run-postman-tests:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          python-version: '3.x'
+          node-version: '18'
 
-      - name: Install Dependencies
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Postman Collection
         run: |
-          python -m pip install --upgrade pip
-          pip install robotframework
-          pip install requests
-          pip install robotframework-requests
-
-      - name: Debug - List all files
-        run: |
-          pwd
-          ls -R
-
-      - name: Run Robot Framework Tests
-        run: |
-          cd QaCoders
-          robot -d logs tests/
-        working-directory: ${{ github.workspace }}
-
-      - name: Upload Robot Framework Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: robot-results
-          path: QaCoders/logs 
-          if-no-files-found: warn
-          compression-level: 6
-          overwrite: false
-          include-hidden-files: false
+          newman run path/to/collection.json \
+            -e path/to/environment.json \
+            --globals path/to/globals.json \
+            --reporters cli,junit \
+            --reporter-junit-export results.xml
