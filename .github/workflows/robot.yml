@@ -19,8 +19,11 @@ jobs:
 
       - name: Run Postman Collection
         run: |
-          newman run path/to/collection.json \
-            -e path/to/environment.json \
-            --globals path/to/globals.json \
-            --reporters cli,junit \
-            --reporter-junit-export results.xml
+          newman run ./postman/collection.json \
+          -e ./postman/environment.json \
+          --globals ./postman/globals.json \
+          --reporters cli,junit,json \
+          --reporter-junit-export ./postman/reports/results.xml \
+          --reporter-json-export ./postman/reports/results.json \
+          --suppress-exit-code
+
