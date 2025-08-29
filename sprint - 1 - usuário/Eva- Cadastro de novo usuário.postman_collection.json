@@ -1,0 +1,776 @@
+{
+	"info": {
+		"_postman_id": "598af91b-4ea3-4dc0-ba45-405265cd32ff",
+		"name": "Api-supernatural",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28933621"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Api User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api-supernatural.qacoders.dev.br/api/user",
+							"protocol": "https",
+							"host": [
+								"api-supernatural",
+								"qacoders",
+								"dev",
+								"br"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});    \r",
+									"\r",
+									"pm.test(\"Verify the message of register\", () => {\r",
+									"    pm.environment.set(\"Message\", `Olá ${pm.environment.get(\"FullName\")}, cadastro realizado com sucesso.`)\r",
+									"})\r",
+									"\r",
+									"pm.test(\"User ID\", () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property('user');\r",
+									"    pm.expect(responseJson.user).to.have.property('_id');\r",
+									"    pm.environment.set(\"anyUser\", responseJson.user._id);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Geração de Primeiro Nome\r",
+									"function firstname() {\r",
+									"    const names = [\"John\", \"Jane\", \"Jack\", \"Jill\", \"Godoy\", \"Jenny\", \"Jake\", \"Matheus\", \"Carlos\", \"Fran\"];\r",
+									"    return names[Math.floor(Math.random() * names.length)];\r",
+									"}\r",
+									"pm.environment.set(\"FirstName\", firstname());\r",
+									"\r",
+									"// Geração de Sobrenome\r",
+									"function lastname() {\r",
+									"    const lastnames = [\"Doe\", \"Smith\", \"Johnson\", \"Williams\", \"Brown\", \"Jones\", \"Garcia\", \"Miller\", \"Davis\", \"Martinez\"];\r",
+									"    return lastnames[Math.floor(Math.random() * lastnames.length)];\r",
+									"}\r",
+									"pm.environment.set(\"LastName\", lastname());\r",
+									"\r",
+									"// Nome completo\r",
+									"pm.environment.set(\"FullName\",\r",
+									"    pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\")\r",
+									");\r",
+									"\r",
+									"// E-mail baseado no nome completo\r",
+									"pm.environment.set(\"Mail\",\r",
+									"    pm.environment.get(\"FullName\")\r",
+									"        .toLowerCase()\r",
+									"        .replace(/\\s/g, \"\")\r",
+									"        .normalize(\"NFD\")\r",
+									"        .replace(/[\\u0300-\\u036f]/g, \"\") +\r",
+									"    '@qacoders.com.br'\r",
+									");\r",
+									"\r",
+									"// Gerar senha aleatória\r",
+									"// function generatePassword() {\r",
+									"//     const chars = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%\";\r",
+									"//     const comprimentoMinimo = 8;\r",
+									"//     const comprimentoMaximo = 12;\r",
+									"//     let senhaArray = [];\r",
+									"\r",
+									"//     senhaArray.push(chars[Math.floor(Math.random() * 26)]); // Maiúscula\r",
+									"//     senhaArray.push(chars[26 + Math.floor(Math.random() * 26)]); // Minúscula\r",
+									"//     senhaArray.push(chars[52 + Math.floor(Math.random() * 10)]); // Número\r",
+									"//     senhaArray.push(chars[62 + Math.floor(Math.random() * 4)]); // Especial\r",
+									"\r",
+									"//     const comprimentoRestante = Math.floor(Math.random() * (comprimentoMaximo - comprimentoMinimo + 1)) + comprimentoMinimo - senhaArray.length;\r",
+									"\r",
+									"//     for (let i = 0; i < comprimentoRestante; i++) {\r",
+									"//         senhaArray.push(chars[Math.floor(Math.random() * chars.length)]);\r",
+									"//     }\r",
+									"\r",
+									"//     return shuffleString(senhaArray.join(\"\"));\r",
+									"// }\r",
+									"\r",
+									"// function shuffleString(string) {\r",
+									"//     return string.split(\"\").sort(() => Math.random() - 0.5).join(\"\");\r",
+									"// }\r",
+									"\r",
+									"// // Gerar e aplicar senha\r",
+									"// const senha = generatePassword();\r",
+									"// pm.environment.set(\"passUser\", senha);\r",
+									"// pm.environment.set(\"confirmPassword\", senha);\r",
+									"\r",
+									"// CPF aleatório\r",
+									"function randomCpf() {\r",
+									"    let cpf = '';\r",
+									"    for (let i = 0; i < 11; i++) {\r",
+									"        cpf += Math.floor(Math.random() * 10).toString();\r",
+									"    }\r",
+									"    return cpf;\r",
+									"}\r",
+									"pm.environment.set(\"CPF\", randomCpf());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenAdmin}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "pt-BR",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{email}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"1234@Test\",\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com confirmação de senha não informada",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{Mail}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"1234@Test\",\r\n    \"confirmPassword\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com senha com mais de 12 caracteres",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{email}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"123456789123\",\r\n    \"confirmPassword\": \"123456789123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com nome com caracteres inválidos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"123456789\",\r\n    \"mail\": \"{{Mail}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"1234@Test\",\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com nome com mais de 100 caracteres",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ana Maria da Conceição Pereira dos Santos Oliveira Souza Lima Fernandes dos Anjos Batista Costa da Silva\",\r\n    \"mail\": \"carlossilva@gmail.com\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"03712545806\",\r\n    \"password\": \"1234@Test\",\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com e-mail não informado",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"1234@Test\",\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com senha sem critérios de segurança",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{email}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"123456\",\r\n    \"confirmPassword\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com senha não informada",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{email}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"\",\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com CPF já existente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{email}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12487104622\",\r\n    \"password\": \"1234@Test\",\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastro de novo usuário com senha com menos de 8 caracteres",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"teste@gmail.com\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"1234@Te\",\r\n    \"confirmPassword\": \"1234@Te\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Validar Token",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api-supernatural.qacoders.dev.br/api/validateToken",
+							"protocol": "https",
+							"host": [
+								"api-supernatural",
+								"qacoders",
+								"dev",
+								"br"
+							],
+							"path": [
+								"api",
+								"validateToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.globals.set(\"tokenAdmin\", pm.response.json().token);\r",
+									" \r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									" "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mail\": \"sysadmin@qacoders.com\",\r\n    \"password\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api-supernatural.qacoders.dev.br/api/login/",
+							"protocol": "https",
+							"host": [
+								"api-supernatural",
+								"qacoders",
+								"dev",
+								"br"
+							],
+							"path": [
+								"api",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Api Company",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// // Verifica se o status é 200 OK\r",
+									"// pm.test(\"Status 200 - Sucesso na listagem\", function () {\r",
+									"//     pm.response.to.have.status(200);\r",
+									"// });\r",
+									"\r",
+									"\r",
+									"// // Verifica se o corpo da resposta tem uma lista\r",
+									"// pm.test(\"Resposta contém uma lista de empresas\", function () {\r",
+									"//     const jsonData = pm.response.json();\r",
+									"//     pm.expect(jsonData).to.be.an(\"array\");\r",
+									"// });\r",
+									"\r",
+									"\r",
+									"// pm.test(\"Verifica se as empresas tem os campos obrigatórios\", function () {\r",
+									"//     let empresas = pm.response.json();\r",
+									" \r",
+									"//     empresas.forEach((empresa) => {\r",
+									"//         let endereco = empresa.address[0];\r",
+									"//         pm.expect(empresa).to.have.property(\"corporateName\");\r",
+									"//         pm.expect(empresa).to.have.property(\"registerCompany\");\r",
+									"//         pm.expect(empresa).to.have.property(\"responsibleContact\");\r",
+									"//         pm.expect(empresa).to.have.property(\"mail\");\r",
+									"//         pm.expect(empresa).to.have.property(\"telephone\");    \r",
+									"//         pm.expect(endereco).to.have.property(\"city\");\r",
+									"//         pm.expect(endereco).to.have.property(\"state\");\r",
+									"//         pm.expect(endereco).to.have.property(\"country\");\r",
+									"//     });\r",
+									"// });\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api-supernatural.qacoders.dev.br/api/company/",
+							"protocol": "https",
+							"host": [
+								"api-supernatural",
+								"qacoders",
+								"dev",
+								"br"
+							],
+							"path": [
+								"api",
+								"company",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar empresa com id válido",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verifica se o status é 200 OK\r",
+									"pm.test(\"Status 200 - Sucesso na listagem\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Verifica se o corpo da resposta é um objeto (empresa única)\r",
+									"pm.test(\"Resposta contém um objeto da empresa\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verifica se as empresas tem os campos obrigatórios\", function () {\r",
+									"    let empresas = pm.response.json();\r",
+									" \r",
+									"    empresas.forEach((empresa) => {\r",
+									"        let endereco = empresa.address[0];\r",
+									"        pm.expect(empresa).to.have.property(\"corporateName\");\r",
+									"        pm.expect(empresa).to.have.property(\"registerCompany\");\r",
+									"        pm.expect(empresa).to.have.property(\"responsibleContact\");\r",
+									"        pm.expect(empresa).to.have.property(\"mail\");\r",
+									"        pm.expect(empresa).to.have.property(\"telephone\");    \r",
+									"        pm.expect(endereco).to.have.property(\"city\");\r",
+									"        pm.expect(endereco).to.have.property(\"state\");\r",
+									"        pm.expect(endereco).to.have.property(\"country\");\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/api/company/68653c87e4154de902333718",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"api",
+								"company",
+								"68653c87e4154de902333718"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar empresa com ID inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Simula que estamos testando um ID inexistente\r",
+									"pm.test(\"Status é 404 -Essa companhia não existe em nosso sistema.\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/company/685b3a7c1f99999fcdecXXXXX5cdB838b",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"company",
+								"685b3a7c1f99999fcdecXXXXX5cdB838b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "authorization",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "{{tokenAdmin}}",
+				"type": "string"
+			},
+			{
+				"key": "in",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
