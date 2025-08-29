@@ -3,7 +3,7 @@ name: Postman Workflow
 on: [push]
 
 jobs:
-  run-postman-tests:
+  api-postman:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
